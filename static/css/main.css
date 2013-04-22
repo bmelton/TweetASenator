@@ -1,0 +1,158 @@
+.modal { 
+   position: fixed;
+   background-color: white;
+   opacity: .9;
+   top: 50%;
+   left: 50%;
+   z-index: 99999;
+   padding: 10px;
+   -webkit-box-shadow: 0px 0px 20px #999;
+      -moz-box-shadow: 0px 0px 20px #999;
+           box-shadow: 0px 0px 20px #999;
+    display: none;
+}
+
+#footer { 
+    text-align: right;
+    color: white;
+    padding: 10px;
+    margin: 10px 0 -20px 0;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    max-width: 980px;
+    opacity: .9;
+    display: block; 
+    position: relative;
+    top: 5px;
+    margin: 5px 5px 0 0;
+    padding: 15px 15px 15px 15px;
+}
+
+#mask { 
+    display: none;
+    background: #000;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+#message { 
+    margin-top: 20px;
+    padding-top: 10px;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    display: block;
+    width: 965px;
+}
+
+#senators { 
+    margin: 10px 0 10px 0; 
+    padding: 0 0 10px 0;
+    display: block;
+    clear: both; 
+    height: 140px;
+}
+
+#letter_count {
+    background-color: #e3e3e3;
+    padding: 5px 5px 5px 0;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    opacity: .9;
+    width: 60px;
+    margin: 0 5px 0 0;
+    display: inline-block; 
+}
+
+#id_submit { 
+    padding: 3px 8px 3px 8px;
+    height: 27px;
+}
+
+.error { font-weight: bold; color: red; }
+
+.logo { 
+    margin: 20px 0;
+}
+
+#officers { 
+    margin: 0 0 10px 0;
+}
+
+.officer img { 
+    float: left;
+    padding: 0 10px 0 0;
+}
+
+.officer { 
+    width: 318px;
+    float: left;
+    background-color: #fff; 
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    opacity: .9;
+    margin: 5px 5px 0 0;
+    padding: 5px;
+    height: 110px;
+}
+
+.senator { 
+    float: left;
+    width: 480px;
+    background-color: #fff; 
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    opacity: .9;
+    margin: 5px 5px 5px 0;
+    padding: 5px;
+    height: 135px;
+}
+.senator img { 
+    float: left;
+    padding: 0 10px 0 0;
+}
+
+
+#auth { 
+    text-align: right;
+    margin-top: 30px;
+}
+
+.selected { 
+    background-color: #D0E799;
+    background: #D0E799 url('/static/images/checkmark.png') top right no-repeat;
+}
+
+#get_started { 
+    background-color: #fff;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    opacity: .9;
+    display: block; 
+    position: relative;
+    top: 5px;
+    margin: 5px 5px 0 0;
+    padding: 5px;
+}
+#senator_empty { 
+    background-color: #fff;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+           -border-radius: 3px;
+    opacity: .9;
+    display: block; 
+    position: relative;
+    top: 5px;
+    margin: 5px 5px 0 0;
+    padding: 5px;
+}

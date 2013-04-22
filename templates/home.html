@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--[if IE 8]> 				 
+<html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html class="no-js" lang="en" > 
+<!--<![endif]-->
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>TweetASenator</title>
+        <link rel="stylesheet" href="/static/css/normalize.css" />
+        <link rel="stylesheet" href="/static/css/foundation.css" />
+        <script src="/static/js/vendor/custom.modernizr.js"></script>
+        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="/static/states.json"></script>
+        <link rel="stylesheet" href="/static/css/supersized.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="/static/theme/supersized.shutter.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="/static/css/main.css" type="text/css" />
+        <script>
+            {% if user.is_authenticated %}
+                logged_in = true;
+            {% else %}
+                logged_in = false;
+            {% endif %}
+        </script>
+        <script type="text/javascript" src="/static/js/jquery.easing.min.js"></script>
+        <script type="text/javascript" src="/static/js/supersized.3.2.7.min.js"></script>
+        <script type="text/javascript" src="/static/theme/supersized.shutter.min.js"></script>
+        <script type="text/javascript" src="/static/js/underscore-min.js"></script>
+        <script type="text/javascript" src="/static/js/json2.js"></script>
+        <script type="text/javascript" src="/static/js/backbone-1.0.0.min.js"></script>
+        <script type="text/javascript" src="/static/js/main.js"></script>
+        <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.png" /> 
+    </head>
+    <body>
+        <div id="hello" class="modal">
+            <img id="big_check" src="/static/images/big_check.png" />
+            <p>Thanks for making your voice heard.  Press <Esc> to close this window.</p>
+        </div>
+        <div class="row">
+            {% csrf_token %}
+            <div class="logo large-6 columns">
+                <a href="#"><img src="/static/images/logo.png" /></a>
+            </div>
+            <div id="auth" class="large-6 columns">
+                <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tweetasenator.com/"
+                data-text="Tweet a Senator" data-via="bmelton" data-size="large" data-hashtags="TweetASenator">Tweet</a>
+                <script>!function(d,s,id){var
+                js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document,
+                'script', 'twitter-wjs');</script>
+                {% if user.is_authenticated %}
+                    <a href="/logout/"><img src="/static/images/logout.png" /></a>
+                {% else %}
+                    <a id="login_link" href="{% url 'socialauth_begin' 'twitter' %}?next=/#AL"><img src="/static/images/twitter.png" /></a>
+                    <!--a href="{% url 'socialauth_begin' 'twitter' %}"><img src="/static/images/twitter.png" /></a-->
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-12 columns">
+                <div id="body"></div>
+                <div id="content">
+                <div id="officers"></div>
+                <div id="senators"></div>
+                </div>
+                <input type="hidden" id="targets" placeholder="twitterers" />
+                <div id="message"></div>
+            </div>
+        </div>
+        <script src="/static/js/foundation.min.js"></script>
+        <script src="/static/js/foundation/foundation.js"></script>
+        <script>
+            $(document).foundation();
+        </script>
+		<script type="text/javascript">
+			jQuery(function($){
+				$.supersized({
+					// Functionality
+					slideshow               :   1,			// Slideshow on/off
+					autoplay				:	0,			// Slideshow starts playing automatically
+					start_slide             :   1,			// Start slide (0 is random)
+					slide_interval          :   2000,		// Length between transitions
+					transition              :   1, 			// 0-None, 1-Fade, 2-Slide Top, 3-Slide Right, 4-Slide Bottom, 5-Slide Left, 6-Carousel Right, 7-Carousel Left
+					transition_speed		:	200,		// Speed of transition
+					performance				:	1,			// 0-Normal, 1-Hybrid speed/quality, 2-Optimizes image quality, 3-Optimizes transition speed // (Only works for Firefox/IE, not Webkit)
+															   
+					// Size & Position						   
+					min_width		        :   0,			// Min width allowed (in pixels)
+					min_height		        :   0,			// Min height allowed (in pixels)
+					vertical_center         :   1,			// Vertically center background
+					horizontal_center       :   1,			// Horizontally center background
+					fit_always				:	0,			// Image will never exceed browser width or height (Ignores min. dimensions)
+					fit_portrait         	:   1,			// Portrait images will not exceed browser height
+					fit_landscape			:   0,			// Landscape images will not exceed browser width
+															   
+					// Components							
+					slides 					:  	[			// Slideshow Images
+                        // { image : 'http://farm4.staticflickr.com/3314/3204423868_13b6ce2f1b_b.jpg' },
+                        { image : 'http://farm9.staticflickr.com/8189/8094866188_114ff75fe8_b.jpg' },
+                        // { image : 'http://farm9.staticflickr.com/8335/8096152944_baeaab225b_b.jpg' },
+                        // { image : 'http://farm8.staticflickr.com/7234/6998633748_5da1ae017f_b.jpg' }
+                    ]
+				});
+		    });
+		</script>
+        <script type="text/template" id="template">
+            <select id="id_states" name="states" class="states">
+                <option selected value="0">Please select a state</option>
+                <% states.each(function(state) { %>
+                    <option value="<%= state.get('code') %>"><%= state.get('name') %></option>
+                <% }); %>
+            </select>
+        </script>
+
+        <script type="text/template" id="get_started_template">
+            <div id="get_started">
+                <p>Select a state or location above to get started!</p>
+            </div>
+        </script>
+
+        <script type="text/template" id="senator_empty_template">
+            <div id="senator_empty">
+                <div class="large-2 columns">
+                   <img src="/static/images/sadface.png"/>&nbsp;
+                </div>
+                <div class="large-10 columns">
+                    <p>Your area doesn't have representation. (Hope you don't pay taxes!)</p>
+                    <p><em>You can still tweet the president, vice president or speaker of the house though.</em></p>
+                </div>&nbsp;
+            </div>
+        </script>
+
+        <script type="text/template" id="officer_template">
+            <div>
+                <div class="officer">
+                    <img class="senator_img" src="<%= pic %>" />
+                    <div style="padding: 0 0 4px 0;">
+                        <strong><%= firstname %> <%= lastname %></strong>
+                    </div>
+                    <div style="padding: 0 0 4px 0;">
+                        <a class="twitter" target="_blank" href="http://twitter.com/<%= twitter %>">@<%= twitter %></a>
+                    </div>
+                    <div style="padding: 0 0 4px 0;">
+                        <em><%= party %></em>
+                    </div>
+                    <div style="padding: 20px 0 4px 0; display: block; width: 290px;">
+                        <div><strong><%= extra_title %></strong></div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="senator_template">
+            <div>
+                <div class="senator">
+                    <img class="senator_img" src="<%= pic %>" />
+                    <div style="padding: 0 0 4px 0;">
+                        <strong><%= firstname %> <%= lastname %></strong>
+                    </div>
+                    <div style="padding: 0 0 4px 0;">
+                        <a class="twitter" target="_blank" href="http://twitter.com/<%= twitter %>">@<%= twitter %></a>
+                    </div>
+                    <div style="padding: 0 0 4px 0;">
+                        <em><%= party %></em>
+                    </div>
+                    <div style="padding: 0 0 4px 0;">
+                        <% if(party == "Republican") { %> Votes party line: <%= rep_votes_percentage %>% <% } %> 
+                        <% if(party == "Democrat") { %> Votes party line: <%= dem_votes_percentage %>% <% } %>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="message_template">
+            <form id="submit_form" action="post">
+            <div id="message_input">
+                <textarea name="message" id="id_message" placeholder="enter your message here"></textarea>
+                <div style="text-align: right;">
+                    <div class="radius" id="letter_count">100</div><input class="button" type="submit" name="submit" id="id_submit" value="Submit" />
+                </div>
+            </div>
+            </form>
+        </script>
+
+        <script type="text/template" id="please_login_template">
+            <div>Please <a href="/login/twitter/">log in with twitter</a> to continue.</div>
+        </script>
+
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-372592-26', 'tweetasenator.com');
+            ga('send', 'pageview');
+        </script>
+    </body>
+</html>
